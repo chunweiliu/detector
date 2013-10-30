@@ -1,4 +1,5 @@
-function [ret_posdata, ret_negdata] = get_postive_examples(VOCopts, pos)
+function [ret_posdata, ret_negdata] = get_postive_examples(VOCopts, pos...
+    sample_params)
 % return positive examples and negative examples (which is partical
 % overlapping with the ground truth).
 
@@ -6,9 +7,9 @@ function [ret_posdata, ret_negdata] = get_postive_examples(VOCopts, pos)
 params=get_default_params;
 
 % define filter size
-w = 16; % 128/8
-h = 10; % 80/8
-offset = 5; % 40/8
+w = sample_params.w; % 128/8
+h = sample_params.h; % 80/8
+offset = sample_params.offset; % 80/8
 
 tic;
 ret_posdata = [];
