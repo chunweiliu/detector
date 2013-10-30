@@ -12,7 +12,7 @@ params=get_default_params;
 %params.feature_type='hog';
 
 % compute feature for each class
-for i=1:VOCopts.nclasses
+for i=1:1%VOCopts.nclasses
     
     cls=VOCopts.classes{i};
     compute_hog_pyramid(VOCopts,cls,params);
@@ -73,17 +73,17 @@ for i=1:length(gtids)
         fdp=sprintf(VOCopts.exfdpath,gtids{i});
         if exist(fdp,'file')
             % load features
-            load(fdp,'fd');
+            load(fdp,'fd','sc');
         else
             % compute and save features
             I=imread(sprintf(VOCopts.imgpath,gtids{i}));
-            fd=extractfd(I,params);
-            save(fdp,'fd');
+            [fd,sc]=extractfd(I,params);
+            save(fdp,'fd','sc');
         end
     end
 end
 
-function fd = extractfd(I,params)
-fd=esvm_pyramid(double(I),params);
+function [fd,sc] = extractfd(I,params)
+[fd,sc]=esvm_pyramid(double(I),params);
 
 

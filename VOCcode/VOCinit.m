@@ -13,7 +13,9 @@ devkitroot=strrep(fileparts(fileparts(mfilename('fullpath'))),'\','/');
 
 % change this path to point to your copy of the PASCAL VOC data
 %VOCopts.datadir=[devkitroot '/'];
-VOCopts.datadir='/Users/chunweiliu/Data/VOCdevkit/';
+%VOCopts.datadir='/Users/chunweiliu/Data/VOCdevkit/';
+VOCopts.datadir='/Users/chunweiliu/Documents/MATLAB/VOC2007/VOCdevkit/';
+
 
 % change this path to a writable directory for your results
 VOCopts.resdir=[devkitroot '/results/' VOCopts.dataset '/'];
@@ -141,3 +143,7 @@ VOCopts.annocachepath=[VOCopts.localdir '%s_anno.mat'];
 % options for example implementations
 
 VOCopts.exfdpath=[VOCopts.localdir '%s_fd.mat'];
+VOCopts.posdatapath=[VOCopts.localdir '%s_posdata.mat'];
+VOCopts.negdata1path=[VOCopts.localdir '%s_negdata1.mat']; % from negative
+VOCopts.negdata2path=[VOCopts.localdir '%s_negdata2.mat']; % from positive
+VOCopts.negdata2path=[VOCopts.localdir '%s_negdata3.mat']; % hard negative
