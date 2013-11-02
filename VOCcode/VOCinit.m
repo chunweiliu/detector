@@ -14,14 +14,24 @@ devkitroot=strrep(fileparts(fileparts(mfilename('fullpath'))),'\','/');
 % change this path to point to your copy of the PASCAL VOC data
 %VOCopts.datadir=[devkitroot '/'];
 %VOCopts.datadir='/Users/chunweiliu/Data/VOCdevkit/';
-VOCopts.datadir='/Users/chunweiliu/Documents/MATLAB/VOC2007/VOCdevkit/';
+%VOCopts.datadir='/Users/chunweiliu/Documents/MATLAB/VOC2007/VOCdevkit/';
+VOCopts.datadir='/mnt/raid/data/chunwei/pascal/';
 
+% change this for your specific project name
+VOCopts.projname='detector';
 
 % change this path to a writable directory for your results
-VOCopts.resdir=[devkitroot '/results/' VOCopts.dataset '/'];
+%VOCopts.resdir=[devkitroot '/results/' VOCopts.dataset '/'];
+VOCopts.resdir=[VOCopts.datadir VOCopts.projname '/results/' VOCopts.dataset '/'];
+if ~exist(VOCopts.resdir, 'dir')
+  mkdir(VOCopts.resdir)
+end
 
 % change this path to a writable local directory for the example code
-VOCopts.localdir=[devkitroot '/local/' VOCopts.dataset '/'];
+VOCopts.localdir=[VOCopts.datadir VOCopts.projname '/local/' VOCopts.dataset '/'];
+if ~exist(VOCopts.localdir, 'dir')
+  mkdir(VOCopts.localdir)
+end
 
 % initialize the training set
 
@@ -146,4 +156,4 @@ VOCopts.exfdpath=[VOCopts.localdir '%s_fd.mat'];
 VOCopts.posdatapath=[VOCopts.localdir '%s_posdata.mat'];
 VOCopts.negdata1path=[VOCopts.localdir '%s_negdata1.mat']; % from negative
 VOCopts.negdata2path=[VOCopts.localdir '%s_negdata2.mat']; % from positive
-VOCopts.negdata2path=[VOCopts.localdir '%s_negdata3.mat']; % hard negative
+VOCopts.negdata3path=[VOCopts.localdir '%s_negdata3.mat']; % hard negative

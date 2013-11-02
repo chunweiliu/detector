@@ -20,7 +20,8 @@ function conf = voc_config(varargin)
 
 % Parent directory that everything (model cache, VOCdevkit) is under
 %BASE_DIR    = '/var/tmp/rbg';
-BASE_DIR    = '/Users/chunweiliu/Documents/MATLAB';
+%BASE_DIR    = '/Users/chunweiliu/Documents/MATLAB';
+BASE_DIR    = '/home/chunwei';
 
 % PASCAL dataset year to use
 PASCAL_YEAR = '2007';
@@ -113,8 +114,10 @@ conf = cv(conf, 'single_byte_size', 4);
 conf = cv(conf, 'pascal.year', PASCAL_YEAR);
 
 % Directory with PASCAL VOC development kit and dataset
-conf = cv(conf, 'pascal.dev_kit', [conf.paths.base_dir '/VOC' ...
-                                   conf.pascal.year '/VOCdevkit/']);
+%conf = cv(conf, 'pascal.dev_kit', [conf.paths.base_dir '/VOC' ...
+%                                   conf.pascal.year '/VOCdevkit/']);
+conf = cv(conf, 'pascal.dev_kit', [conf.paths.base_dir '/' ...
+                                   PROJECT]);
 % For INRIA person                                   
 %conf = cv(conf, 'pascal.dev_kit', [conf.paths.base_dir '/INRIA/VOCdevkit/']);
 
@@ -141,8 +144,7 @@ conf.pascal.VOCopts = get_voc_opts(conf);
 % [was called 'cachedir' in previous releases]
 % conf = cv(conf, 'paths.model_dir', [conf.paths.base_dir '/' ...
 %                                     conf.project '/' conf.pascal.year '/']);
-conf = cv(conf, 'paths.model_dir', [conf.paths.base_dir '/' ...
-                                    conf.project '/local/VOC' conf.pascal.year '/']);
+conf = cv(conf, 'paths.model_dir', conf.pascal.VOCopts.localdir);
 
 exists_or_mkdir(conf.paths.model_dir);
 
