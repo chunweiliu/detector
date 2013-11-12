@@ -1,27 +1,48 @@
-function model = train_model(labels, data, boxes, ids)
+function [bestModel, bestParams, bestAP] = ...
+    train_model(labels, data, boxes, ids, modelName, feature_type)
 
 % setup
-%global VOCopts
 VOCinit
 
 % split data
-k = 2;
-cvIds = wl_cvIds(ids, labels, k);
+fold = 3;
+cvIds = wl_cvIds(ids, labels, fold);
 
 % do cross validation on a given set of paramters
-bestC = [];
 bestAP = 0;
 cs = [0.001 0.01 0.1 1 10 100];
-for ci = 1:length(cs)
+
+if strcmp(feature_type, 'wta')
+    isWTA = 1;
+    oridata = data;
+    
+    ks = [2 4 8];
+    ms = [10 100 1000];
+    [css, kss, mss] = meshgrid(cs, ks, ms);
+else
+    css = cs;
+end
+
+
+for ci = 1:numel(css)
     % for each parameter
-    c = cs(ci);
-    ids2 = [];
-    boxes2 = [];
-    confidence2 = [];
-    for i = 1:k
+    c = css(ci);
+    
+    if strcmp(feature_type,'wta')
+        k = kss(ci);
+        m = mss(ci);
+        [data, thetas]= wtahash(oridata, k, m, [], isWTA);
+        fprintf('%s: c %f k %d m %d\n', modelName, c, k, m);
+    else
+        fprintf('%s: c %f\n', modelName, c);
+    end
+      
+    
+    ap = 0;
+    for i = 1:fold
         % for each training fold
         trainIds = [];
-        for j = 1:k
+        for j = 1:fold
             if j ~= i
                 trainIds = [trainIds; cvIds{j}];
             end
@@ -30,37 +51,47 @@ for ci = 1:length(cs)
 
         % train a linear model
         w1 = sqrt(sum(labels(trainIds)~=1)/sum(labels(trainIds)==1));
-        options = sprintf('-s 3 -c %f -w1 %f -w-1 1 -B 1 -q', c, w1);
+        options = sprintf('-s 3 -c %f -w1 %f -w-1 1 -B 1', c, w1);
         model = train(labels(trainIds), sparse(data(trainIds,:)), options);
 
         % evaluate on validation set
-        options = sprintf('-b 0 -q');
+        options = sprintf('-b 0');
         [plabels, acc, pscores] = predict(labels(testIds), sparse(data(testIds,:)), model, options);
 
         % addjust score
         pscores = pscores * model.Label(1);
 
-        % gather the detection results
-        ids2 = [ids2; ids(testIds)];
-        boxes2 = [boxes2; boxes(testIds,:)];
-        confidence2 = [confidence2; pscores];
+        %
+        dets{1} = ids(testIds);
+        dets{2} = boxes(testIds,:);
+        dets{3} = pscores;
+        ap = ap + wl_evalAP(modelName, dets, VOCopts.trainset);
+   
     end
 
-    % compute the AP for the detection results
-    dets{1} = ids2;
-    dets{2} = boxes2;
-    dets{3} = confidence2;
-    modelName = 'aeroplane';
-
-    % debug
-    ap = wl_evalAP(modelName, dets, VOCopts.trainset);
-   
+    ap = ap / fold;
+    
     if ap > bestAP
         bestAP = ap;
-        bestC = c;
+        bestParams.c = c;
+        
+        if strcmp(feature_type,'wta')
+            bestParams.k = k;
+            bestParams.m = m;
+            bestParams.thetas = thetas;
+            bestParams.isWTA = isWTA;
+        end
+        
+        %bestModel = model;
     end
 end
 
+% Train the model using the best parameter
+if strcmp(feature_type, 'wta')
+    data = wtahash(oridata,bestParams.k,bestParams.m,bestParams.thetas,bestParams.isWTA);
+end
+options = sprintf('-s 3 -c %f -w1 %f -w-1 1 -B 1', bestParams.c, w1);
+bestModel = train(labels, sparse(data), options);
 
 
 

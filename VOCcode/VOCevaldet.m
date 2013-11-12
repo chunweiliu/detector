@@ -1,4 +1,4 @@
-function [rec,prec,ap] = VOCevaldet(VOCopts,id,cls,draw)
+function [rec,prec,ap] = VOCevaldet(VOCopts,id,cls,draw,year,feature_type,params)
 
 % load test set
 
@@ -41,7 +41,9 @@ for i=1:length(gtids)
 end
 
 % load results
-[ids,confidence,b1,b2,b3,b4]=textread(sprintf(VOCopts.detrespath,id,cls),'%s %f %f %f %f %f');
+respath=sprintf(VOCopts.detrespath,'comp3',cls,feature_type,...
+    sample_params.w,sample_params.h,sample_params.offset);
+[ids,confidence,b1,b2,b3,b4]=textread(respath);
 BB=[b1 b2 b3 b4]';
 
 % sort detections by decreasing confidence
@@ -120,4 +122,6 @@ if draw
     xlabel 'recall'
     ylabel 'precision'
     title(sprintf('class: %s, subset: %s, AP = %.3f',cls,VOCopts.testset,ap));
+    
+    saveas(gcf, sprintf(VOCopts.prpath, cls, year, feature_type), 'png');
 end

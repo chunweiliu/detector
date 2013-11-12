@@ -57,7 +57,7 @@ catch
       pos(numpos).trunc   = rec.objects(j).truncated;
       pos(numpos).dataids = dataid;
       pos(numpos).sizes   = (bbox(3)-bbox(1)+1)*(bbox(4)-bbox(2)+1);
-      pos(numpos).id      = rec.filename(1:end-4);
+      pos(numpos).id      = ids{i};%rec.filename(1:end-4);
 
       % Create flipped example
       numpos  = numpos + 1;
@@ -77,7 +77,7 @@ catch
       pos(numpos).trunc   = rec.objects(j).truncated;
       pos(numpos).dataids = dataid;
       pos(numpos).sizes   = (bbox(3)-bbox(1)+1)*(bbox(4)-bbox(2)+1);
-      pos(numpos).id      = rec.filename(1:end-4);
+      pos(numpos).id      = ids{i};%rec.filename(1:end-4);
     end
 
     % Create one entry per foreground image in the impos array
@@ -87,7 +87,7 @@ catch
     impos(numimpos).dataids = zeros(count, 1);
     impos(numimpos).sizes   = zeros(count, 1);
     impos(numimpos).flip    = false;
-    impos(numimpos).id      = rec.filename(1:end-4);
+    impos(numimpos).id      = ids{i}; %rec.filename(1:end-4);
 
     for j = 1:count
       dataid = dataid + 1;
@@ -105,7 +105,7 @@ catch
     impos(numimpos).dataids = zeros(count, 1);
     impos(numimpos).sizes   = zeros(count, 1);
     impos(numimpos).flip    = true;
-    impos(numimpos).id      = rec.filename(1:end-4);
+    impos(numimpos).id      = ids{i}; %rec.filename(1:end-4);
     unflipped_boxes         = impos(numimpos-1).boxes;
     
     for j = 1:count
@@ -137,7 +137,7 @@ catch
       neg(numneg).im     = [VOCopts.datadir rec.imgname];
       neg(numneg).flip   = false;
       neg(numneg).dataid = dataid;
-      neg(numneg).id     = rec.filename(1:end-4);
+      neg(numneg).id     = ids{i};%rec.filename(1:end-4);
     end
   end
   

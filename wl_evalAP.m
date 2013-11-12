@@ -26,9 +26,9 @@ else
 end
 
 % step 0.3: set up environment
-global VOCopts;
+%global VOCopts;
 %wl_setup();
-%VOCinit;
+VOCinit;
 
 %% step 1: get detection results
 idsT = dets{1};

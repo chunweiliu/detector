@@ -35,13 +35,13 @@ end
 
 % initialize the training set
 
-VOCopts.trainset='train'; % use train for development
-% VOCopts.trainset='trainval'; % use train+val for final challenge
+%VOCopts.trainset='train'; % use train for development
+VOCopts.trainset='trainval'; % use train+val for final challenge
 
 % initialize the test set
 
-VOCopts.testset='val'; % use validation data for development test set
-% VOCopts.testset='test'; % use test set for final challenge
+%VOCopts.testset='val'; % use validation data for development test set
+VOCopts.testset='test'; % use test set for final challenge
 
 % initialize main challenge paths
 
@@ -150,10 +150,14 @@ VOCopts.minoverlap=0.5;
 
 VOCopts.annocachepath=[VOCopts.localdir '%s_anno.mat'];
 
-% options for example implementations
+%% options for example implementations
 
-VOCopts.exfdpath=[VOCopts.localdir '%s_fd.mat'];
-VOCopts.posdatapath=[VOCopts.localdir '%s_posdata.mat'];
-VOCopts.negdata1path=[VOCopts.localdir '%s_negdata1.mat']; % from negative
-VOCopts.negdata2path=[VOCopts.localdir '%s_negdata2.mat']; % from positive
-VOCopts.negdata3path=[VOCopts.localdir '%s_negdata3.mat']; % hard negative
+%VOCopts.exfdpath=[VOCopts.localdir '%s_fd.mat'];
+VOCopts.hogpath=[VOCopts.localdir '%s_%d_hog.mat']; % id, flip
+VOCopts.hogdatapath=[VOCopts.localdir '%s_%d_%d_%d_%d_hogdata.mat'];
+VOCopts.prpath=[VOCopts.resdir 'Main/%s_%s_%s_pr.png'];
+VOCopts.detrespath=[VOCopts.resdir 'Main/%s_det_' VOCopts.testset '_%s_%s_%d_%d_%d.txt']; %cls feature_type, sample_params
+
+VOCopts.minoverlappos=0.8;
+VOCopts.minoverlapneg=0.2;
+VOCopts.maxoverlapneg=0.5;
